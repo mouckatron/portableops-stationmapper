@@ -4,6 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -27,12 +29,26 @@ func main() {
 
 	cmd := flag.Arg(0)
 
+	setupDB()
+
+	c := make(chan os.Signal)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-c
+		cleanup()
+		os.Exit(1)
+	}()
+
 	if cmd == "serve" {
 		serveHTTP(myHost, myPort, ginProduction)
 	} else if cmd == "tiles" {
 		GetTiles()
 	}
 
+}
+
+func cleanup() {
+	cleanupDB()
 }
 
 func serveHTTP(myHost string, myPort int, ginProduction bool) {
