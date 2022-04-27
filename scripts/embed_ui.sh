@@ -2,10 +2,10 @@
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 ROOT_DIR=$(dirname $SCRIPT_DIR)
-UI_IN=$ROOT_DIR/ui
+UI_IN=$ROOT_DIR/ui/dist
 UI_OUT=$ROOT_DIR/cmd/stationmapper/ui
 
-rm $UI_OUT/*.go
+rm -f $UI_OUT/*.go
 
 cat <<EOF > $UI_OUT/main.go
 package ui
