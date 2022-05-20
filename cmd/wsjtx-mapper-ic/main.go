@@ -35,7 +35,9 @@ func main() {
 	for {
 		select {
 		case message := <-wsjtxChannel:
-			handleServerMessage(message)
+			go handleServerMessage(message)
+		case error := <-errChannel:
+			log.Println(error)
 		}
 	}
 
@@ -45,7 +47,7 @@ func main() {
 func handleServerMessage(message interface{}) {
 	switch message.(type) {
 	case wsjtx.HeartbeatMessage:
-	// 	log.Println("Heartbeat:", message)
+		// log.Println("Heartbeat:", message)
 	case wsjtx.StatusMessage:
 	// 	log.Println("Status:", message)
 	case wsjtx.DecodeMessage:
