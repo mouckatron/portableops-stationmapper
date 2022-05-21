@@ -33,7 +33,7 @@ func RouterPaths(r *gin.Engine) {
 EOF
 
 
-for f in $(ls $UI_IN/*.js $UI_IN/*.css $UI_IN/*.html $UI_IN/*.map)
+for f in $(ls $UI_IN/*.js $UI_IN/*.html)
 do
     basef=$(basename $f)
     out=$UI_OUT/$basef.b64.go
