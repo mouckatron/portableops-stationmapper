@@ -84,9 +84,10 @@ stationSelectInteraction.on('select', function(e){
     minZoom: 2,
     maxZoom: 5
   }),
-  overlays: [popupOverlay],
-  interactions: [stationSelectInteraction]
+    overlays: [popupOverlay],
 });
+
+map.addInteraction(stationSelectInteraction)
 
 /* /* var lineStyle = [new Style({stroke: new Stroke({color: '#d12710', width: 2})})];
  *  *
