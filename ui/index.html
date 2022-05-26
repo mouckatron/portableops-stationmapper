@@ -6,6 +6,10 @@
      html {
        font-family: sans-serif;
      }
+     .search {
+       height: 50px;
+       width: 100%;
+     }
      .map {
        height: 800px;
        width: 100%;
@@ -54,6 +58,37 @@
     </style>
   </head>
   <body>
+    <div id="search">
+      <form>
+        Band:
+        <select>
+          <option value="600">600M</option>
+          <option value="160">160M</option>
+          <option value="80">80M</option>
+          <option value="60">60M</option>
+          <option value="40">40M</option>
+          <option value="30">30M</option>
+          <option value="20">20M</option>
+          <option value="17">17M</option>
+          <option value="15">15M</option>
+          <option value="12">12M</option>
+          <option value="10">10M</option>
+          <option value="6">6M</option>
+          <option value="4">4M</option>
+          <option value="2">2M</option>
+          <option value="70">70CM</option>
+        </select>
+
+        Callsign:
+        <input type="text" name="callsign">
+
+        Since:
+        <input type="date" name="updated_at">
+        <input type="time" name="updated_at_time">
+
+        <input type="submit" value="Search">
+      </form>
+    </div>
     <div id="map" class="map"></div>
     <div id="popup" class="ol-popup">
       <a href="#" id="popup-closer" class="ol-popup-closer"></a>

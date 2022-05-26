@@ -68,8 +68,7 @@ stationSelectInteraction.on('select', function(e){
 })
 
 
-
-  var map = new Map({
+var map = new Map({
   target: 'map',
   layers: [
     new Tile({
@@ -105,13 +104,49 @@ map.addInteraction(stationSelectInteraction)
  *  * stationSource.addFeature(pointB)
  *  * stationSource.addFeature(line) */
 
+search = false
+searchBand = null
+searchCallsign = null
+searchDate = null
+searchTime = null
+
+function searchStations(event, options){
+  event.preventDefault()
+
+  search = true
+
+  _callsign = document.querySelector('#search input[name="callsign"]').value
+  searchCallsign = (_callsign != "" ? _callsign : null)
+
+  _band = document.querySelector('#search input[name="band"]').value
+  searchBand = (_band != "" ? _band : null)
+
+  stationFeatures = []
+  refreshStations()
+  return false
+}
+document.querySelector('#search').addEventListener("submit", searchStations)
+
 function refreshStations(){
-  fetch(`${host}/stations`)
+
+  paramList = []
+  params = ""
+  if (searchCallsign != null){
+    paramList.push(`callsign=${searchCallsign}`)
+  }
+
+  if(paramList.length > 0){
+    params = "?" + paramList.join('&')
+  }
+
+  fetch(`${host}/stations${params}`)
     .then(response => {
       return response.json();
     })
     .then(stations => {
-      //stationSource.clear()
+
+      if (search) stationSource.clear()
+
       for (let station in stations) {
         if (!(station in stationFeatures) && stations[station]['maidenhead'] != ""){
 
@@ -125,6 +160,8 @@ function refreshStations(){
           console.log(stations[station])
         }
       }
+
+      search = false
     })
 }
 
