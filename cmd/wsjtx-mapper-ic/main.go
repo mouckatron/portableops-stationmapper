@@ -91,13 +91,15 @@ func parseDecodedCQ(message wsjtx.DecodeMessage) {
 	maidenhead := ""
 
 	callsign := parts[1]
-	if len(parts) == 4 {
+	if len(parts) == 4 {  // to match something like CQ DX
 		callsign = parts[2]
 	}
 
 	if len(parts) > 2 {
 		maidenheadMatch := maidenheadAll.FindStringSubmatch(message.Message)
-		maidenhead = maidenheadMatch[0]
+    if maidenheadMatch != nil {
+      maidenhead = maidenheadMatch[0]
+    }
 	}
 
 	log.Println("Callsign:", callsign, "Location:", maidenhead)
