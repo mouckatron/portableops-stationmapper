@@ -13,7 +13,7 @@ xcompile:
 
 build_ui:
 	cd ui && npm install
-	cd ui/dist && rm *
+	cd ui/dist && rm -f *
 	cd ui && npm run-script build
 
 embed_ui:
