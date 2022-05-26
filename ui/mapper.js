@@ -21,6 +21,7 @@ if (process.env.NODE_ENV === 'development') { // Or, `process.env.NODE_ENV !== '
 
 
 // ** STATIONS ****************************************
+var stationFeatures = {}
 var stationSource = new VectorSource({
   features: []
 })
@@ -110,13 +111,17 @@ function refreshStations(){
       return response.json();
     })
     .then(stations => {
-      stationSource.clear()
+      //stationSource.clear()
       for (let station in stations) {
-        if (stations[station]['maidenhead'] != "") {
-          stationSource.addFeature(new Feature({
+        if (!(station in stationFeatures) && stations[station]['maidenhead'] != ""){
+
+          stationFeatures[station] = new Feature({
             geometry: new Point(fromLonLat([stations[station]['longitude'], stations[station]['latitude']])),
             data: stations[station]
-          }))
+          })
+
+          stationSource.addFeature(stationFeatures[station]) // this might not be the right way to do this
+
           console.log(stations[station])
         }
       }
