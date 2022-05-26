@@ -13,7 +13,21 @@ import (
 func apiGetStations(c *gin.Context) {
 
 	var dbStations []DBStation
-	db.Find(&dbStations)
+
+  var callsign, ok = c.GetQuery("callsign")
+  
+  // var updated_at_str, ok = c.GetQuery("updated_at")
+
+  if ok {
+    // updated_at, err := time.Parse("2006-02-01T15:04:05Z", updated_at_str)
+    // if err == nil {
+    //   db.Find(&dbStations, "updated_at >= ?", updated_at.Format("2006-02-01"))
+    // }
+    db.Find(&dbStations, "callsign = ?", callsign)
+  } else {
+  
+    db.Find(&dbStations)
+  }
 
 	var response = make(map[string]*models.Station)
 
