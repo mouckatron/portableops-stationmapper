@@ -19,7 +19,7 @@ var (
 	maidenhead4   = regexp.MustCompile(".*([A-R]{2}[0-9]{2})$")
 	maidenhead6   = regexp.MustCompile("([A-R]{2}[0-9]{2}[a-x]{2})$")
 	maidenhead8   = regexp.MustCompile("([A-R]{2}[0-9]{2}[a-x]{2}[0-9]{2})$")
-	responseMsg   = regexp.MustCompile("(R?[-+]?[0-9]+|RRR|(RR)?73)$")
+	responseMsg   = regexp.MustCompile("(R?[-+][0-9]+|RRR|(RR)?73)$")
 )
 
 func main() {
@@ -108,7 +108,7 @@ func parseDecodedCQ(message wsjtx.DecodeMessage) {
 
 func parseDecodedToFrom(message wsjtx.DecodeMessage) {
 	parts := strings.Fields(message.Message)
-	if len(parts) < 2 {
+	if len(parts) < 3 {
 		return
 	}
 
