@@ -19,7 +19,7 @@ var (
 	maidenhead4   = regexp.MustCompile(".*([A-R]{2}[0-9]{2})$")
 	maidenhead6   = regexp.MustCompile("([A-R]{2}[0-9]{2}[a-x]{2})$")
 	maidenhead8   = regexp.MustCompile("([A-R]{2}[0-9]{2}[a-x]{2}[0-9]{2})$")
-	responseMsg   = regexp.MustCompile("(R?[-+]?[0-9]+|RRR|73)$")
+	responseMsg   = regexp.MustCompile("(R?[-+]?[0-9]+|RRR|(RR)?73)$")
 )
 
 func main() {
@@ -91,19 +91,19 @@ func parseDecodedCQ(message wsjtx.DecodeMessage) {
 	maidenhead := ""
 
 	callsign := parts[1]
-	if len(parts) == 4 {  // to match something like CQ DX
+	if len(parts) == 4 { // to match something like CQ DX
 		callsign = parts[2]
 	}
 
 	if len(parts) > 2 {
 		maidenheadMatch := maidenheadAll.FindStringSubmatch(message.Message)
-    if maidenheadMatch != nil {
-      maidenhead = maidenheadMatch[0]
-    }
+		if maidenheadMatch != nil {
+			maidenhead = maidenheadMatch[0]
+		}
 	}
 
 	log.Println("Callsign:", callsign, "Location:", maidenhead)
-	addStation(callsign, maidenhead)
+	go addStation(callsign, maidenhead)
 }
 
 func parseDecodedToFrom(message wsjtx.DecodeMessage) {
@@ -121,13 +121,13 @@ func parseDecodedToFrom(message wsjtx.DecodeMessage) {
 		to = parts[0]
 		from = parts[1]
 		maidenhead = parts[2]
-		addStation(from, maidenhead)
 	}
 	log.Println("To:", to, "From:", from, "Location:", maidenhead)
+	go addStation(from, maidenhead)
 }
 
 func addStation(callsign string, maidenhead string) {
-	s := &models.Station{Callsign: callsign, Maidenhead: maidenhead}
+	s := &models.Station{Callsign: cleanCallsign(callsign), Maidenhead: maidenhead}
 	s.MaidenheadToLatLon()
 
 	client := &http.Client{}
@@ -152,4 +152,8 @@ func addStation(callsign string, maidenhead string) {
 	}
 
 	fmt.Println(resp.StatusCode)
+}
+
+func cleanCallsign(call string) string {
+	return strings.Trim(call, "<>")
 }
