@@ -4,7 +4,16 @@ import (
 	"log"
 
 	"github.com/pd0mz/go-maidenhead"
+	"gorm.io/gorm"
 )
+
+type DBStation struct {
+	gorm.Model
+	Callsign   string `gorm:"unique"`
+	Maidenhead string
+	Lat        float64
+	Lon        float64
+}
 
 type Station struct {
 	Callsign   string  `json:"callsign"`

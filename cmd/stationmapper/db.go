@@ -19,7 +19,7 @@ func setupDB() {
 		log.Fatal(err)
 	}
 
-	db.AutoMigrate(&DBStation{})
+	db.AutoMigrate(&models.DBStation{})
 }
 
 func cleanupDB() {
@@ -27,13 +27,14 @@ func cleanupDB() {
 }
 
 func DBUpsertStation(station models.Station) {
-	var dbStation DBStation
+	var dbStation models.DBStation
 
 	result := db.Where("Callsign = ?", station.Callsign).Find(&dbStation)
 
 	if result.RowsAffected > 0 {
 		// some more complicated update
 		if station.Maidenhead != "" {
+			log.Println("Updating station", station.Callsign)
 			station.MaidenheadToLatLon()
 			db.Model(&dbStation).Update("Maidenhead", station.Maidenhead)
 			db.Model(&dbStation).Update("Lat", station.Lat)
@@ -50,12 +51,4 @@ func DBUpsertStation(station models.Station) {
 		db.Create(&dbStation)
 	}
 
-}
-
-type DBStation struct {
-	gorm.Model
-	Callsign   string `gorm:"unique"`
-	Maidenhead string
-	Lat        float64
-	Lon        float64
 }
