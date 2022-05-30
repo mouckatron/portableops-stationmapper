@@ -118,14 +118,24 @@ function searchStations(event, options){
   _callsign = document.querySelector('#search input[name="callsign"]').value
   searchCallsign = (_callsign != "" ? _callsign : null)
 
-  _band = document.querySelector('#search input[name="band"]').value
+  _band = document.querySelector('#search select[name="band"]').value
   searchBand = (_band != "" ? _band : null)
 
   stationFeatures = []
   refreshStations()
   return false
 }
+function clearSearch(event, options){
+  search = true
+  searchBand = null
+  searchCallsign = null
+  searchDate = null
+  searchTime = null
+  stationFeatures = []
+  refreshStations()
+}
 document.querySelector('#search').addEventListener("submit", searchStations)
+document.querySelector('#search input[type=reset]').addEventListener("click", clearSearch)
 
 function refreshStations(){
 
