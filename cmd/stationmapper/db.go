@@ -36,9 +36,11 @@ func DBUpsertStation(station models.Station) {
 		if station.Maidenhead != "" {
 			log.Println("Updating station", station.Callsign)
 			station.MaidenheadToLatLon()
-			db.Model(&dbStation).Update("Maidenhead", station.Maidenhead)
-			db.Model(&dbStation).Update("Lat", station.Lat)
-			db.Model(&dbStation).Update("Lon", station.Lon)
+
+			dbStation.Maidenhead = station.Maidenhead
+			dbStation.Lat = station.Lat
+			dbStation.Lon = station.Lon
+			db.Save(&dbStation)
 		}
 
 	} else {
