@@ -29,6 +29,7 @@ func main() {
 
 	cmd := flag.Arg(0)
 
+	readConfig()
 	setupDB()
 
 	c := make(chan os.Signal)

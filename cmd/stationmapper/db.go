@@ -1,11 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/mouckatron/portableops-stationmapper/internal/models"
-	//"gorm.io/driver/sqlite"
+	"github.com/spf13/viper"
+
 	"github.com/glebarez/sqlite"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -14,7 +17,14 @@ var db *gorm.DB
 func setupDB() {
 	var err error = nil
 
-	db, err = gorm.Open(sqlite.Open("stationmapper.sqlite"), &gorm.Config{})
+	switch viper.GetString("db.type") {
+	case "sqlite":
+		db, err = gorm.Open(sqlite.Open(viper.GetString("db.path")), &gorm.Config{})
+	case "postgres":
+		dsn := fmt.Sprintf("user=stationmapper dbname=stationmapper")
+		db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	}
+
 	if err != nil {
 		log.Fatal(err)
 	}
